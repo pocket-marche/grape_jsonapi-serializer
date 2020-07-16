@@ -1,43 +1,54 @@
-# GrapeJsonapi::Serializer
+# Grape::JsonapiSerializer
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/grape_jsonapi/serializer`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Use [jsonapi-serializer](https://github.com/jsonapi-serializer/jsonapi-serializer) with [Grape](https://github.com/ruby-grape/grape).
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add the `grape` and `grape_jsonapi-serializer` gems to Gemfile.
 
 ```ruby
+gem 'grape'
 gem 'grape_jsonapi-serializer'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install grape_jsonapi-serializer
-
 ## Usage
 
-TODO: Write usage instructions here
+### Tell your API to use Grape::Formatter::JsonapiSerializer
 
-## Development
+```ruby
+class API < Grape::API
+  content_type :jsonapi, "application/vnd.api+json"
+  formatter :json, Grape::Formatter::JsonapiSerializer
+  formatter :jsonapi, Grape::Formatter::JsonapiSerializer
+end
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+### Use `render` to specify JSONAPI options
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+get "/" do
+  user = User.find("123")
+  render user, include: [:account]
+end
+```
 
-## Contributing
+### Use a custom serializer
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/grape_jsonapi-serializer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+```ruby
+get "/" do
+  user = User.find("123")
+  render user, serializer: 'CustomUserSerializer'
+end
+```
 
-## License
+Or
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+```ruby
+get "/" do
+  user = User.find("123")
+  render CustomUserSerializer.new(user).serialized_json
+end
+```
 
-## Code of Conduct
+## Credit
 
-Everyone interacting in the GrapeJsonapi::Serializer project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/grape_jsonapi-serializer/blob/master/CODE_OF_CONDUCT.md).
+Code adapted from [Grape::FastJsonapi](https://github.com/EmCousin/grape_fast_jsonapi)
