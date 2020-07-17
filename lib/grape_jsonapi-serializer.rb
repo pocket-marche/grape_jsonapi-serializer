@@ -1,4 +1,4 @@
-require 'jsonapi-serializer'
+require 'fast_jsonapi'
 require 'grape'
 require 'grape_jsonapi-serializer/endpoint_extension'
 require 'grape_jsonapi-serializer/formatter'
