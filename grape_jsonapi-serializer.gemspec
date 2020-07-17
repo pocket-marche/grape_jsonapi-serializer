@@ -5,7 +5,7 @@ require 'grape_jsonapi/serializer/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'grape_jsonapi-serializer'
-  spec.version       = GrapeJsonapi::Serializer::VERSION
+  spec.version       = Grape::JsonapiSerializer::VERSION
   spec.authors       = ['Norifumi Homma']
   spec.email         = ['norifumi.homma@gmail.com']
 

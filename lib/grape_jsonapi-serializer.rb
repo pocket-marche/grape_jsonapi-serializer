@@ -1,0 +1,6 @@
+require 'jsonapi-serializer'
+require 'grape'
+require 'grape_jsonapi-serializer/endpoint_extension'
+require 'grape_jsonapi-serializer/formatter'
+require 'grape_jsonapi-serializer/parser'
+require 'grape_jsonapi-serializer/version'

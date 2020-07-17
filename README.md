@@ -49,6 +49,35 @@ get "/" do
 end
 ```
 
+### Model parser for response documentation
+
+When using Grape with Swagger via [grape-swagger](https://github.com/ruby-grape/grape-swagger), you can generate response documentation automatically via the provided following model parser:
+
+```ruby
+# Jsonapi Serializer example
+
+# app/serializers/base_serializer.rb
+class BaseSerializer; end
+# app/serializers/user_serializer.rb
+class UserSerializer < BaseSerializer
+  include JSONAPI::Serializer
+
+  set_type :user
+  has_many :orders
+
+  attributes :name, :email
+end
+
+# config/initializers/grape_swagger.rb
+GrapeSwagger.model_parsers.register(GrapeSwagger::JsonapiSerializer::Parser, BaseSerializer)
+
+# Your grape API endpoint
+desc 'Get current user' do
+  success code: 200, model: UserSerializer, message: 'The current user'
+# [...]
+end
+```
+
 ## Credit
 
 Code adapted from [Grape::FastJsonapi](https://github.com/EmCousin/grape_fast_jsonapi)
