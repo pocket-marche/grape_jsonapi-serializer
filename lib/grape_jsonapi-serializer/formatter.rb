@@ -38,11 +38,16 @@ module Grape
         end
 
         def serializable_collection(collection, options)
-         if heterogeneous_collection?(collection)
-            records = collection.map do |o|
-              (jsonapi_serializer_serializable(o, options).serializable_hash || o.map(&:serializable_hash)).fetch(:data)
+          if heterogeneous_collection?(collection)
+            data, meta, links, included = [], [], [], []
+            collection.map do |o|
+              serialized = (jsonapi_serializer_serializable(o, options).serializable_hash || o.map(&:serializable_hash))
+              data << serialized[:data]
+              meta = serialized[:meta]
+              links = serialized[:links]
+              included << serialized[:included]
             end
-            {data: records}
+            { data: data, meta: meta, links: links, included: included.flatten }
           else
             jsonapi_serializer_serializable(collection, options)&.serializable_hash || collection.map(&:serializable_hash)
           end
