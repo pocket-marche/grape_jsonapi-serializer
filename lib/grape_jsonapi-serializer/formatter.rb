@@ -39,9 +39,10 @@ module Grape
 
         def serializable_collection(collection, options)
          if heterogeneous_collection?(collection)
-            collection.map do |o|
-              jsonapi_serializer_serializable(o, options).serializable_hash || o.map(&:serializable_hash)
+            records = collection.map do |o|
+              (jsonapi_serializer_serializable(o, options).serializable_hash || o.map(&:serializable_hash)).fetch(:data)
             end
+            {data: records}
           else
             jsonapi_serializer_serializable(collection, options)&.serializable_hash || collection.map(&:serializable_hash)
           end
