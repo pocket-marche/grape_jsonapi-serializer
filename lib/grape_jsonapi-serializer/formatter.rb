@@ -49,7 +49,13 @@ module Grape
               links = serialized[:links]
               included << serialized[:included]
             end
-            { data: data, meta: meta, links: links, included: included.flatten }
+            included = included.flatten&.compact if included.present?
+
+            ret = { data: data }
+            ret.merge!(meta: meta) unless meta.blank?
+            ret.merge!(links: links) unless links.blank?
+            ret.merge!(included: included) unless included.blank?
+            ret
           else
             jsonapi_serializer_serializable(collection, options)&.serializable_hash || collection.map(&:serializable_hash)
           end
